@@ -79,6 +79,17 @@ namespace VEF.AnimalGenes
             ResetCaches();
         }
 
+        public override void PostSplitOff(Thing piece)
+        {
+            base.PostSplitOff(piece);
+            if (piece == parent || !HasAssignedGenes || parent.TryGetComp<CompHatcher>() == null ||
+                piece.TryGetComp<CompAnimalGenes>() is not { } splitGenes)
+                return;
+
+            // The split-off eggs carry the same inherited genes as the rest of the clutch.
+            splitGenes.SetInheritedGenes(genes);
+        }
+
         public void ResetCaches()
         {
             cachedLifespanFactor = -1;
